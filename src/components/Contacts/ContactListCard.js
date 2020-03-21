@@ -4,14 +4,14 @@ import { ContactDetailEditModal } from "./ContactDetailEditModal";
 import { ContactCard } from "./ContactCard";
 
 export const ContactListCard = ({ contact }) => {
-  const { isShowing, toggle } = useModal();
+  const { isShowing: isShowingModal, toggle: toggleModal } = useModal();
   return (
     <>
-      <ContactCard toggleDetail={toggle} contact={contact} />
-      {isShowing && (
+      <ContactCard toggleDetail={toggleModal} contact={contact} />
+      {isShowingModal && (
         <ContactDetailEditModal
-          isShowingOverlay={isShowing}
-          toggleOverlay={toggle}
+          isShowingOverlay={isShowingModal}
+          toggleOverlay={toggleModal}
           contactId={contact.id}
         />
       )}

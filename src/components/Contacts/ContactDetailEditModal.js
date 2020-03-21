@@ -1,90 +1,77 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { useModal } from "../../utils/useModal";
 
-import {
-  ModalOverlay,
-  ModalWrapper,
-  FlexWrapper
-} from "../../styled/containers";
-import { Icon, CloseIcon } from "../../styled/icons";
+import { useQuery } from "@apollo/react-hooks";
+import { CONTACT_QUERY } from "../../gql";
+
+import { FlexWrapper } from "../../styled/containers";
 import { ContactDetailModal } from "./ContactDetailModal";
 import { EditContactModal } from "./EditContactModal";
 import { BlackButton } from "../../styled/buttons";
+import { Loading, Error } from "../global";
+
+import { Modal, ModalArea, ModalCloseIcon } from "../utilities/Modal";
+
+import { Button } from "@material-ui/core";
 
 export const ContactDetailEditModal = ({
   toggleOverlay,
   isShowingOverlay,
   contactId
 }) => {
-  const { isShowing, toggle } = useModal();
+  const { isShowing: isShowingDetail, toggle: toggleDetail } = useModal(true);
+  const { isShowing: isShowingEdit, toggle: toggleEdit } = useModal();
 
-  return isShowingOverlay
-    ? ReactDOM.createPortal(
-        <>
-          <ModalOverlay>
-            <ModalWrapper>
-              <Icon
-                position="absolute"
-                top="42px"
-                right="60px"
-                cursor="pointer"
-                onClick={e => {
-                  e.stopPropagation();
-                  isShowing ? toggle() : toggleOverlay();
-                }}
-              >
-                <CloseIcon
-                  className="modal-close-button"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                />
-              </Icon>
-              {isShowing ? (
-                <EditContactModal
-                  toggleOverlay={toggleOverlay}
-                  toggleEdit={toggle}
-                  contactId={contactId}
-                />
-              ) : (
-                <ContactDetailModal
-                  toggleEdit={toggle}
-                  isShowingEdit={isShowing}
-                  contactId={contactId}
-                />
-              )}
+  const { data, loading, error } = useQuery(CONTACT_QUERY, {
+    variables: { id: contactId }
+  });
+
+  const toggleDetailEdit = () => {
+    toggleDetail();
+    toggleEdit();
+  };
+
+  return (
+    <Modal isShowing={isShowingOverlay}>
+      {isShowingDetail && (
+        <ModalArea>
+          <ModalCloseIcon toggle={toggleOverlay} />
+          {loading && <Loading />}
+          {error && <Error>{error.message}</Error>}
+          {data && (
+            <>
+              <ContactDetailModal
+                toggleEdit={toggleEdit}
+                isShowingEdit={isShowingEdit}
+                contact={data.contact}
+              />
               <FlexWrapper padding="0">
-                {!isShowing && (
-                  <BlackButton small onClick={e => toggle()}>
-                    Edit
-                  </BlackButton>
-                )}
+                <Button
+                  size="large"
+                  color="secondary"
+                  variant="contained"
+                  onClick={e => toggleDetailEdit(toggleDetail, toggleEdit)}
+                >
+                  Edit
+                </Button>
               </FlexWrapper>
-            </ModalWrapper>
-          </ModalOverlay>
-        </>,
-        document.body
-      )
-    : null;
+            </>
+          )}
+        </ModalArea>
+      )}
+      {isShowingEdit && (
+        <ModalArea>
+          <ModalCloseIcon
+            toggle={() => toggleDetailEdit(toggleDetail, toggleEdit)}
+          />
+          <EditContactModal
+            toggleOverlay={toggleOverlay}
+            toggleDetailEdit={toggleDetailEdit}
+            contact={data.contact}
+            contactId={contactId}
+          />
+        </ModalArea>
+      )}
+    </Modal>
+  );
 };
-
-//   <ModalWrapper>
-//     <Icon
-//       position="absolute"
-//       top="42px"
-//       right="60px"
-//       cursor="pointer"
-//       onClick={e => {
-//         e.stopPropagation();
-//         toggleOverlay();
-//       }}
-//     >
-//       <CloseIcon
-//         className="modal-close-button"
-//         data-dismiss="modal"
-//         aria-label="Close"
-//       />
-//     </Icon>
-
-//     {children}
-//   </ModalWrapper>

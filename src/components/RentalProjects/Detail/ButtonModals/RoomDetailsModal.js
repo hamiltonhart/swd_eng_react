@@ -1,6 +1,6 @@
 import React from "react";
 import { useModal } from "../../../../utils";
-import { Modal } from "../../../utilities";
+import { Modal, ModalArea, ModalCloseIcon } from "../../../utilities";
 
 import { useQuery } from "@apollo/react-hooks";
 import { GET_ROOMS_QUERY } from "../../../../gql";
@@ -43,8 +43,10 @@ export const RoomDetailsModal = ({ projectId }) => {
           >
             Room Details
           </BlackButton>
-          {isShowing && (
-            <Modal isShowing={isShowing} toggle={toggle}>
+          <Modal isShowing={isShowing} toggle={toggle}>
+            <ModalArea>
+              <ModalCloseIcon toggle={toggle} />
+
               <PageHeading>Show Rooms</PageHeading>
               <GridWrapper
                 as="form"
@@ -84,8 +86,8 @@ export const RoomDetailsModal = ({ projectId }) => {
                     )
                   )}
               </GridWrapper>
-            </Modal>
-          )}
+            </ModalArea>
+          </Modal>
         </>
       )}
     </>

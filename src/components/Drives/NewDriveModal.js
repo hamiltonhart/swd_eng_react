@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useModal } from "../../utils";
 import { NewDriveForm } from "./NewDriveForm";
 
-import { Modal } from "../utilities";
+import { Modal, ModalArea, ModalCloseIcon } from "../utilities";
 import { PageHeading } from "../../styled/typography";
 import {
   InputWrapper,
@@ -35,44 +35,47 @@ export const NewDriveModal = ({ homeButton }) => {
           <RoundButton onClick={() => toggle()}>+</RoundButton>
         </PositionWrapper>
       )}
-      <Modal isShowing={isShowing} toggle={toggle}>
-        <PageHeading>Add Drives</PageHeading>
-        <FlexWrapper
-          as="form"
-          minWidth="350px"
-          maxWidth="350px"
-          justifyContent="space-evenly"
-          margin="0 0 0 0 "
-          padding="30px 20px 20px 30px"
-          rowGap="30px"
-          onSubmit={e => handleSubmit(e)}
-        >
-          <>
-            <NewDriveForm
-              driveNumber={driveNumber}
-              capacity={driveCapacity}
-              quantity={driveQuantity}
-              setDriveNumber={setDriveNumber}
-              setDriveCapacity={setDriveCapacity}
-              setDriveQuantity={setDriveQuantity}
-            />
-          </>
-
-          <InputWrapper gridColumn="4 / 10" width="100%">
-            {driveNumber && driveCapacity && driveQuantity ? (
-              <RedButton
-                as="input"
-                type="submit"
-                minWidth="100%"
-                value={"Create Drives"}
+      <Modal isShowing={isShowing}>
+        <ModalArea>
+          <ModalCloseIcon toggle={toggle} />
+          <PageHeading>Add Drives</PageHeading>
+          <FlexWrapper
+            as="form"
+            minWidth="350px"
+            maxWidth="350px"
+            justifyContent="space-evenly"
+            margin="0 0 0 0 "
+            padding="30px 20px 20px 30px"
+            rowGap="30px"
+            onSubmit={e => handleSubmit(e)}
+          >
+            <>
+              <NewDriveForm
+                driveNumber={driveNumber}
+                capacity={driveCapacity}
+                quantity={driveQuantity}
+                setDriveNumber={setDriveNumber}
+                setDriveCapacity={setDriveCapacity}
+                setDriveQuantity={setDriveQuantity}
               />
-            ) : (
-              <InactiveButton minWidth="100%" disabled>
-                Create Drives
-              </InactiveButton>
-            )}
-          </InputWrapper>
-        </FlexWrapper>
+            </>
+
+            <InputWrapper gridColumn="4 / 10" width="100%">
+              {driveNumber && driveCapacity && driveQuantity ? (
+                <RedButton
+                  as="input"
+                  type="submit"
+                  minWidth="100%"
+                  value={"Create Drives"}
+                />
+              ) : (
+                <InactiveButton minWidth="100%" disabled>
+                  Create Drives
+                </InactiveButton>
+              )}
+            </InputWrapper>
+          </FlexWrapper>
+        </ModalArea>
       </Modal>
     </>
   );

@@ -6,6 +6,8 @@ import { HomePageContact } from "../components/Contacts";
 import { HomePageRentals } from "../components/RentalProjects";
 import { HomePageDrives } from "../components/Drives";
 
+import { Loading, Error } from "../components/global";
+
 import { HOME_PAGE_QUERY } from "../gql";
 import { useQuery } from "@apollo/react-hooks";
 
@@ -14,8 +16,8 @@ const HomePage = () => {
 
   return (
     <MainWrapper>
-      {loading && <h1>Loading...</h1>}
-      {error && <h1>Error: {error.message}</h1>}
+      {loading && <Loading />}
+      {error && <Error error={error} />}
       {data && (
         <>
           <PageHeadingWrapper>

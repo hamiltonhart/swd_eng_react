@@ -4,6 +4,9 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "./styling/theme";
+
 import { Query, ApolloProvider } from "react-apollo";
 // import { useQuery } from "@apollo/react-hooks";
 import ApolloClient, { gql } from "apollo-boost";
@@ -45,9 +48,11 @@ const IS_LOGGED_IN = gql`
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <Query query={IS_LOGGED_IN}>
-      {({ data }) => (data.isLoggedIn ? <App /> : <Login />)}
-    </Query>
+    <ThemeProvider theme={theme}>
+      <Query query={IS_LOGGED_IN}>
+        {({ data }) => (data.isLoggedIn ? <App /> : <Login />)}
+      </Query>
+    </ThemeProvider>
   </ApolloProvider>,
 
   document.getElementById("root")

@@ -1,14 +1,40 @@
 import React, { useState } from "react";
 
-import { PageHeading } from "../styled/typography";
-import { FlexWrapper, InputWrapper } from "../styled/containers";
-import { Input, Label } from "../styled/forms";
-import { RedButton, InactiveButton } from "../styled/buttons";
+import {
+  makeStyles,
+  Typography,
+  TextField,
+  Button,
+  Box,
+  Snackbar
+} from "@material-ui/core";
+
+import MuiAlert from "@material-ui/lab/Alert";
 
 import { LOGIN_MUT } from "../gql";
 import { useMutation, useApolloClient } from "@apollo/react-hooks";
 
+const useStyles = makeStyles({
+  mainContainer: {
+    display: "block",
+    margin: "10% auto 0 auto",
+    borderRadius: "5px",
+    maxWidth: "500px"
+  },
+  formInput: {
+    margin: "10px 0"
+  },
+  pageHeading: {
+    textTransform: "uppercase"
+  }
+});
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 export const Login = () => {
+  const classes = useStyles();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -25,52 +51,55 @@ export const Login = () => {
   };
 
   return (
-    <FlexWrapper>
-      <FlexWrapper
-        flexDirection="column"
-        margin="10% 5%"
-        border="5px solid black"
-        borderRadius="10px"
-        padding="20px"
-        maxWidth="400px"
+    <Box className={classes.mainContainer} boxShadow={3} p={5}>
+      <Typography className={classes.pageHeading} variant="h2" align="center">
+        Login
+      </Typography>
+      {error && (
+        <Snackbar open={true}>
+          <Alert severity="error">{error.message}</Alert>
+        </Snackbar>
+      )}
+      <Box
+        component="form"
+        className={classes.form}
+        onSubmit={e => formSubmit(e, username, password)}
       >
-        <PageHeading>Login</PageHeading>
-        <FlexWrapper
-          as="form"
-          onSubmit={e => formSubmit(e, username, password)}
+        <TextField
+          label="Username"
+          placeholder="Username"
+          className={classes.formInput}
+          variant="outlined"
+          fullWidth
+          required
+          onChange={e => setUsername(e.target.value)}
+          value={username}
+        />
+
+        <TextField
+          label="Password"
+          placeholder="Password"
+          type="password"
+          variant="outlined"
+          className={classes.formInput}
+          required
+          fullWidth
+          onChange={e => setPassword(e.target.value)}
+          value={password}
+        />
+
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="large"
+          className={classes.formInput}
+          fullWidth
+          disabled={!username.trim() || !password.trim()}
         >
-          <InputWrapper>
-            <Label>Username</Label>
-            <Input
-              value={username}
-              onChange={e => setUsername(e.target.value)}
-            />
-          </InputWrapper>
-          <InputWrapper>
-            <Label>Password</Label>
-            <Input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-            />
-          </InputWrapper>
-          <InputWrapper>
-            {username && password ? (
-              <RedButton
-                as="input"
-                type="submit"
-                minWidth="100%"
-                value="Login"
-              />
-            ) : (
-              <InactiveButton minWidth="100%" inactive>
-                Login
-              </InactiveButton>
-            )}
-          </InputWrapper>
-          {error && <h1>{error.message}</h1>}
-        </FlexWrapper>
-      </FlexWrapper>
-    </FlexWrapper>
+          Submit
+        </Button>
+      </Box>
+    </Box>
   );
 };

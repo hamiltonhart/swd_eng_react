@@ -1,20 +1,80 @@
 import React, { useState } from "react";
 import InputMask from "react-input-mask";
 
+import {
+  DELETE_CONTACT,
+  UPDATE_CONTACT,
+  ALL_CONTACTS_QUERY,
+  HOME_PAGE_QUERY
+} from "../../gql";
+import { useMutation } from "@apollo/react-hooks";
+
 import { PageHeading } from "../../styled/typography";
 import { GridWrapper, InputWrapper } from "../../styled/containers";
 import { Input, Label, Select, Textarea, Required } from "../../styled/forms";
 import { RedButton, InactiveButton } from "../../styled/buttons";
 
-export const EditContactModal = ({ toggleEdit }) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [company, setCompany] = useState("");
-  const [title, setTitle] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [notes, setNotes] = useState("");
+import { makeStyles, Button, ClickAwayListener } from "@material-ui/core";
 
+const useStyles = makeStyles({
+  deleteButton: {
+    gridColumn: "4 / 10"
+  }
+});
+
+export const EditContactModal = ({
+  contactId,
+  contact,
+  toggleOverlay,
+  toggleDetailEdit
+}) => {
+  const [firstName, setFirstName] = useState(contact.firstName);
+  const [lastName, setLastName] = useState(contact.lastName);
+  const [company, setCompany] = useState(contact.company || "");
+  const [title, setTitle] = useState(contact.title || "");
+  const [phone, setPhone] = useState(contact.phoneNumber || "");
+  const [email, setEmail] = useState(contact.email || "");
+  const [notes, setNotes] = useState(contact.notes || "");
+  const [deleteActive, setDeleteActive] = useState(false);
+
+  const [deleteContact, { error: deleteError }] = useMutation(DELETE_CONTACT);
+  const [updateContact, { error: editError }] = useMutation(UPDATE_CONTACT);
+
+  const deleteContactSubmit = (e, contactId) => {
+    e.preventDefault();
+    deleteContact({
+      variables: { contactId: contactId },
+      refetchQueries: [{ query: ALL_CONTACTS_QUERY, query: HOME_PAGE_QUERY }],
+      onCompleted: contactDeleted()
+    });
+  };
+
+  const formSubmit = (e, updateContact) => {
+    e.preventDefault();
+    updateContact({
+      variables: {
+        id: contactId,
+        firstName,
+        lastName,
+        company,
+        title,
+        phoneNumber: phone,
+        email,
+        notes
+      },
+      onCompleted: contactUpdated()
+    });
+  };
+
+  const contactDeleted = () => {
+    toggleOverlay();
+  };
+
+  const contactUpdated = () => {
+    toggleDetailEdit();
+  };
+
+  const classes = useStyles();
   return (
     <>
       <PageHeading>Edit Contact</PageHeading>
@@ -23,6 +83,7 @@ export const EditContactModal = ({ toggleEdit }) => {
         minWidth="622px;"
         maxWidth="622px;"
         margin="20px 0 0 0 "
+        onSubmit={e => formSubmit(e, updateContact)}
       >
         <InputWrapper gridColumn="span 6">
           <Label>
@@ -79,10 +140,7 @@ export const EditContactModal = ({ toggleEdit }) => {
             mask="(999) 999-9999"
             placeholder="(555) 555-5555"
             value={phone}
-            onChange={
-              e => setPhone(e.target.value)
-              //   e.target.value.isNaN ? null : setPhone(e.target.value)
-            }
+            onChange={e => setPhone(e.target.value)}
           />
         </InputWrapper>
         <InputWrapper gridColumn="span 6">
@@ -103,14 +161,56 @@ export const EditContactModal = ({ toggleEdit }) => {
           />
         </InputWrapper>
         <InputWrapper gridColumn="4 / 10">
-          {firstName && lastName ? (
+          {firstName && lastName && !deleteActive ? (
+            <Button
+              type="submit"
+              size="large"
+              color="primary"
+              fullWidth
+              variant="contained"
+            >{`Save ${firstName}`}</Button>
+          ) : (
+            <Button
+              type="submit"
+              size="large"
+              color="primary"
+              fullWidth
+              variant="contained"
+              disabled
+            >{`Save ${firstName}`}</Button>
+          )}
+          {/* {firstName && lastName && !deleteActive ? (
             <RedButton minWidth="100%">{`Save ${firstName}`}</RedButton>
           ) : (
             <InactiveButton minWidth="100%" disabled>
               Save Changes
             </InactiveButton>
-          )}
+          )} */}
         </InputWrapper>
+        {deleteActive ? (
+          <ClickAwayListener onClickAway={() => setDeleteActive(false)}>
+            <Button
+              className={classes.deleteButton}
+              color="primary"
+              variant="contained"
+              size="small"
+              fullWidth
+              onClick={e => deleteContactSubmit(e, contactId)}
+            >
+              Delete
+            </Button>
+          </ClickAwayListener>
+        ) : (
+          <Button
+            className={classes.deleteButton}
+            color="primary"
+            fullWidth
+            size="small"
+            onClick={e => setDeleteActive(!deleteActive)}
+          >
+            Delete
+          </Button>
+        )}
       </GridWrapper>
     </>
   );
