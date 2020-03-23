@@ -10,6 +10,7 @@ export const Card = styled.div`
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
   transform: scaleY(1);
   transition: all 100ms ease-in-out;
+  cursor: ${props => props.cursor || "pointer"};
   ${props => props.margin && `margin: ${props.margin}`};
 
   &:hover {

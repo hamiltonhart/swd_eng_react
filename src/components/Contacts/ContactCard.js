@@ -8,10 +8,10 @@ export const ContactCard = ({ toggleDetail, contact }) => {
       <CardHeading>{`${contact.firstName} ${contact.lastName}`}</CardHeading>
       <FlexWrapper justifyContent="left" padding="0">
         <CardSubheading margin="0 0 0 10px">
-          {contact.company || "Company"}
+          {contact.company || "---"}
         </CardSubheading>
         <CardSubheading margin="0 10px 0 10px">|</CardSubheading>
-        <CardSubheading>{contact.title || "Title"}</CardSubheading>
+        <CardSubheading>{contact.title || "---"}</CardSubheading>
       </FlexWrapper>
       <SimpleDiv className="body__nohide" padding="8px 0">
         <p>

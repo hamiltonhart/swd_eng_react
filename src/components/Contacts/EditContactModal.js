@@ -45,10 +45,9 @@ export const EditContactModal = ({
       variables: { contactId: contactId },
       refetchQueries: [
         {
-          query: ALL_CONTACTS_QUERY,
-          query: HOME_PAGE_QUERY,
-          variables: { limit: 8, reverse: true }
-        }
+          query: ALL_CONTACTS_QUERY
+        },
+        { query: HOME_PAGE_QUERY, variables: { limit: 8, reverse: true } }
       ],
       onCompleted: contactDeleted()
     });
