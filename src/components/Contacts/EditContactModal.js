@@ -12,7 +12,6 @@ import { useMutation } from "@apollo/react-hooks";
 import { PageHeading } from "../../styled/typography";
 import { GridWrapper, InputWrapper } from "../../styled/containers";
 import { Input, Label, Select, Textarea, Required } from "../../styled/forms";
-import { RedButton, InactiveButton } from "../../styled/buttons";
 
 import { makeStyles, Button, ClickAwayListener } from "@material-ui/core";
 
@@ -44,7 +43,13 @@ export const EditContactModal = ({
     e.preventDefault();
     deleteContact({
       variables: { contactId: contactId },
-      refetchQueries: [{ query: ALL_CONTACTS_QUERY, query: HOME_PAGE_QUERY }],
+      refetchQueries: [
+        {
+          query: ALL_CONTACTS_QUERY,
+          query: HOME_PAGE_QUERY,
+          variables: { limit: 8, reverse: true }
+        }
+      ],
       onCompleted: contactDeleted()
     });
   };
@@ -179,13 +184,6 @@ export const EditContactModal = ({
               disabled
             >{`Save ${firstName}`}</Button>
           )}
-          {/* {firstName && lastName && !deleteActive ? (
-            <RedButton minWidth="100%">{`Save ${firstName}`}</RedButton>
-          ) : (
-            <InactiveButton minWidth="100%" disabled>
-              Save Changes
-            </InactiveButton>
-          )} */}
         </InputWrapper>
         {deleteActive ? (
           <ClickAwayListener onClickAway={() => setDeleteActive(false)}>

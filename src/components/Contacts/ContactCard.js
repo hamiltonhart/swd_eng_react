@@ -1,7 +1,6 @@
 import React from "react";
 import { Card, FlexWrapper, SimpleDiv } from "../../styled/containers";
 import { CardHeading, CardSubheading } from "../../styled/typography";
-import { ContactDetailEditModal } from "./ContactDetailEditModal";
 
 export const ContactCard = ({ toggleDetail, contact }) => {
   return (

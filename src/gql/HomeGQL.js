@@ -1,8 +1,8 @@
 import { gql } from "apollo-boost";
 
 export const HOME_PAGE_QUERY = gql`
-  query {
-    contacts {
+  query($limit: Int, $reverse: Boolean) {
+    contacts(limit: $limit, reverse: $reverse) {
       id
       firstName
       lastName

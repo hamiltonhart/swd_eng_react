@@ -56,7 +56,10 @@ export const NewContactModal = ({ redButton, roundButton, blackButton }) => {
         notes,
         phoneNumber: phone
       },
-      refetchQueries: [{ query: ALL_CONTACTS_QUERY, query: HOME_PAGE_QUERY }],
+      refetchQueries: [
+        { query: ALL_CONTACTS_QUERY },
+        { query: HOME_PAGE_QUERY, variables: { limit: 8, reverse: true } }
+      ],
       onCompleted: createCompleted()
     });
   };

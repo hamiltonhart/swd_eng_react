@@ -1,25 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useQuery } from "@apollo/react-hooks";
-import { DRIVES_QUERY } from "../gql";
+import { ALL_DRIVES_QUERY } from "../gql";
+
+import {
+  makeStyles,
+  InputLabel,
+  MenuItem,
+  Select,
+  OutlinedInput,
+  TextField
+} from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
 
 import {
   MainWrapper,
   PageHeadingWrapper,
-  GridWrapper,
   FlexWrapper,
   InputWrapper
 } from "../styled/containers";
 import { PageHeading } from "../styled/typography";
-import { DriveCard, DriveInfo } from "../components/Drives";
-import { Select, Input, Label } from "../styled/forms";
-import { Icon, SearchIcon } from "../styled/icons";
+import { DriveListInfo } from "../components/Drives";
+import { Label } from "../styled/forms";
+import { Icon } from "../styled/icons";
 import { NewDriveModal } from "../components/Drives";
 
+const useStyles = makeStyles({
+  select: {
+    minWidth: "212px"
+  },
+  label: {
+    paddingLeft: "12px"
+  },
+  search: {}
+});
+
 const DrivesListPage = () => {
+  const [filterValue, setFilterValue] = useState("available");
   const [searchValue, setSearchValue] = useState("");
 
-  const { data, loading, error } = useQuery(DRIVES_QUERY);
+  const { data, loading, error } = useQuery(ALL_DRIVES_QUERY);
+
+  const classes = useStyles();
 
   return (
     <MainWrapper>
@@ -27,33 +49,38 @@ const DrivesListPage = () => {
         <PageHeading>Drives</PageHeading>
       </PageHeadingWrapper>
 
-      <FlexWrapper justifyContent="space-between">
+      <FlexWrapper justifyContent="space-between" alignItems="flex-end">
         <InputWrapper width="none">
-          <Label>Sorting</Label>
-          <Select defaultValue="available" minWidth="212px">
-            <option value="all">All</option>
-            <option value="available">Available</option>
-            <option value="unavailable">Unavailable</option>
+          <InputLabel className={classes.label} id="drive-filter-label">
+            Sorting
+          </InputLabel>
+          <Select
+            labelId="drive-filter-label"
+            id="drive-filter-select"
+            className={classes.select}
+            value={filterValue}
+            color="primary"
+            variant="outlined"
+            onChange={e => setFilterValue(e.target.value)}
+          >
+            <MenuItem value="all">All</MenuItem>
+            <MenuItem value="available">Available</MenuItem>
+            <MenuItem value="unavailable">Unavailable</MenuItem>
           </Select>
         </InputWrapper>
 
         <InputWrapper width="auto">
-          <Label>Search</Label>
-          <Input
+          <InputLabel className={classes.label}>Search</InputLabel>
+          <OutlinedInput
             placeholder="Number or Rental"
             value={searchValue}
+            label="Search"
+            color="primary"
+            notched={false}
+            endAdornment={<SearchIcon />}
+            variant="outlined"
             onChange={e => setSearchValue(e.target.value)}
-            padding="17px 50px 17px 32px"
           />
-          <Icon
-            position="absolute"
-            top="45%"
-            right="10%"
-            svgWidth="20px"
-            cursor="pointer"
-          >
-            <SearchIcon />
-          </Icon>
         </InputWrapper>
       </FlexWrapper>
 
@@ -61,20 +88,7 @@ const DrivesListPage = () => {
       {error && <h1>{error.message}</h1>}
       {data && (
         <>
-          <FlexWrapper
-            justifyContent="space-around"
-            padding="19px 100px 64px 100px"
-          >
-            <DriveInfo capacity="250GB" quantity="0" />
-            <DriveInfo capacity="500GB" quantity="0" />
-            <DriveInfo capacity="1TB" quantity="20" />
-            <DriveInfo capacity="2TB" quantity="40" />
-          </FlexWrapper>
-          <GridWrapper padding="0 0 20px 0">
-            {data.drives.map(drive => (
-              <DriveCard key={drive.id} drive={drive} />
-            ))}
-          </GridWrapper>
+          <DriveListInfo drives={data.drives} filterValue={filterValue} />
         </>
       )}
 
@@ -84,3 +98,15 @@ const DrivesListPage = () => {
 };
 
 export default DrivesListPage;
+
+{
+  /* <Icon
+  position="absolute"
+  top="45%"
+  right="10%"
+  svgWidth="20px"
+  cursor="pointer"
+>
+  <SearchIcon />
+</Icon>; */
+}

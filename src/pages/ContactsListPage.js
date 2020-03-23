@@ -63,8 +63,6 @@ const ContactsListPage = () => {
           </FlexWrapper>
 
           <GridWrapper padding="20px 20px">
-            {/* <ContactDetailModal />
-        <ContactDetailEditModal /> */}
             {data.contacts.map(contact => (
               <ContactListCard contact={contact} />
             ))}

@@ -44,6 +44,7 @@ export const DriveCard = ({ drive }) => {
       {isShowing && (
         <EditDriveModal
           driveId={drive.id}
+          drive={drive}
           isShowing={isShowing}
           toggle={toggle}
         />

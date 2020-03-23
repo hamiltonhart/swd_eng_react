@@ -12,7 +12,9 @@ import { HOME_PAGE_QUERY } from "../gql";
 import { useQuery } from "@apollo/react-hooks";
 
 const HomePage = () => {
-  const { loading, error, data } = useQuery(HOME_PAGE_QUERY);
+  const { loading, error, data } = useQuery(HOME_PAGE_QUERY, {
+    variables: { limit: 8, reverse: true }
+  });
 
   return (
     <MainWrapper>

@@ -1,28 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { useModal } from "../../utils";
 import { NewDriveForm } from "./NewDriveForm";
 
 import { Modal, ModalArea, ModalCloseIcon } from "../utilities";
 import { PageHeading } from "../../styled/typography";
-import {
-  InputWrapper,
-  PositionWrapper,
-  FlexWrapper
-} from "../../styled/containers";
+import { PositionWrapper } from "../../styled/containers";
 
-import { RedButton, RoundButton, InactiveButton } from "../../styled/buttons";
+import { RedButton, RoundButton } from "../../styled/buttons";
+import { CircularProgress } from "@material-ui/core";
+import { useQuery } from "@apollo/react-hooks";
+import { GET_LAST_DRIVE } from "../../gql";
 
 export const NewDriveModal = ({ homeButton }) => {
   const { isShowing, toggle } = useModal();
-  const [driveNumber, setDriveNumber] = useState("1");
-  const [driveCapacity, setDriveCapacity] = useState("2TB");
-  const [driveQuantity, setDriveQuantity] = useState("1");
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    console.log(driveNumber, driveCapacity, driveQuantity);
-    toggle();
-  };
+  const { data, loading, error } = useQuery(GET_LAST_DRIVE);
 
   return (
     <>
@@ -39,42 +31,13 @@ export const NewDriveModal = ({ homeButton }) => {
         <ModalArea>
           <ModalCloseIcon toggle={toggle} />
           <PageHeading>Add Drives</PageHeading>
-          <FlexWrapper
-            as="form"
-            minWidth="350px"
-            maxWidth="350px"
-            justifyContent="space-evenly"
-            margin="0 0 0 0 "
-            padding="30px 20px 20px 30px"
-            rowGap="30px"
-            onSubmit={e => handleSubmit(e)}
-          >
-            <>
-              <NewDriveForm
-                driveNumber={driveNumber}
-                capacity={driveCapacity}
-                quantity={driveQuantity}
-                setDriveNumber={setDriveNumber}
-                setDriveCapacity={setDriveCapacity}
-                setDriveQuantity={setDriveQuantity}
-              />
-            </>
-
-            <InputWrapper gridColumn="4 / 10" width="100%">
-              {driveNumber && driveCapacity && driveQuantity ? (
-                <RedButton
-                  as="input"
-                  type="submit"
-                  minWidth="100%"
-                  value={"Create Drives"}
-                />
-              ) : (
-                <InactiveButton minWidth="100%" disabled>
-                  Create Drives
-                </InactiveButton>
-              )}
-            </InputWrapper>
-          </FlexWrapper>
+          {loading && <CircularProgress />}
+          {data && (
+            <NewDriveForm
+              toggle={toggle}
+              nextDriveNumber={data.lastDrive.driveNumber + 1}
+            />
+          )}
         </ModalArea>
       </Modal>
     </>
