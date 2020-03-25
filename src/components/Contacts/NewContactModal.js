@@ -5,6 +5,8 @@ import { useModal } from "../../utils";
 import { useMutation } from "@apollo/react-hooks";
 import { CREATE_CONTACT, ALL_CONTACTS_QUERY, HOME_PAGE_QUERY } from "../../gql";
 
+import { Button } from "@material-ui/core";
+
 import { Modal, ModalArea, ModalCloseIcon } from "../utilities";
 import { PageHeading } from "../../styled/typography";
 import {
@@ -83,9 +85,14 @@ export const NewContactModal = ({ redButton, roundButton, blackButton }) => {
         </RedButton>
       )}
       {blackButton && (
-        <BlackButton small onClick={() => toggle()}>
+        <Button
+          size="small"
+          color="secondary"
+          variant="contained"
+          onClick={() => toggle()}
+        >
           New Contact
-        </BlackButton>
+        </Button>
       )}
       {roundButton && (
         <PositionWrapper position="fixed" bottom="5%" right="4%">
