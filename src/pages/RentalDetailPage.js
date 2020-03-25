@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 
 import {
   RentalBasicInfo,
@@ -8,6 +9,9 @@ import {
   RentalDates,
   RentalDrives
 } from "../components/RentalProjects/Detail";
+import { Error } from "../components/global";
+
+import { Button } from "@material-ui/core";
 
 import {
   MainWrapper,
@@ -17,22 +21,52 @@ import {
 } from "../styled/containers";
 import { PageHeading, PageSubheading } from "../styled/typography";
 
-import { useQuery } from "@apollo/react-hooks";
-import { GET_RENTAL_QUERY } from "../gql";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import {
+  GET_RENTAL_QUERY,
+  DELETE_RENTAL,
+  HOME_PAGE_QUERY,
+  GET_RENTALS_QUERY
+} from "../gql";
 
 const RentalDetailPage = props => {
+  const [rentalId, setRentalId] = useState(
+    (props.location.state && props.location.state.rentalId) ||
+      window.location.pathname.slice(9)
+  );
+  const [deleted, setDeleted] = useState(false);
+
   const { data, loading, error } = useQuery(GET_RENTAL_QUERY, {
     variables: {
-      id: props.location.state
-        ? props.location.state.rentalId
-        : window.location.pathname.slice(9)
+      id: rentalId
     }
   });
 
+  const [deleteRentalProject, { error: deleteError }] = useMutation(
+    DELETE_RENTAL
+  );
+
+  const handleDelete = e => {
+    e.preventDefault();
+    deleteRentalProject({
+      variables: { projectId: rentalId },
+      refetchQueries: [
+        { query: HOME_PAGE_QUERY, variables: { limit: 8, reverse: true } },
+        { query: GET_RENTALS_QUERY }
+      ],
+      onCompleted: deleteCompleted()
+    });
+  };
+
+  const deleteCompleted = () => {
+    setDeleted(!deleted);
+  };
+
   return (
     <MainWrapper>
+      {deleted && <Redirect to="/rentals" />}
       {loading && <h1>Loading</h1>}
-      {error && <h1>Error: {error.message}</h1>}
+      {error && <Error error={error} />}
       {data && (
         <>
           <PageHeadingWrapper>
@@ -46,6 +80,7 @@ const RentalDetailPage = props => {
           <GridWrapper columns="65% 35%" columnGap="30px">
             <SimpleDiv>
               <RentalBasicInfo
+                project={data.rentalProject}
                 abbreviation={data.rentalProject.abbreviation}
                 room={data.rentalProject.primaryRoom}
                 config={data.rentalProject.channelConfig}
@@ -77,6 +112,14 @@ const RentalDetailPage = props => {
                 drives={data.rentalProject.rentalDrives}
               />
             </SimpleDiv>
+            <Button
+              color="secondary"
+              variant="outlined"
+              onClick={e => handleDelete(e)}
+            >
+              Delete
+            </Button>
+            {deleteError && <Error error={deleteError} />}
           </GridWrapper>
         </>
       )}

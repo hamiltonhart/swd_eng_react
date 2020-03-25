@@ -4,6 +4,16 @@ import { useQuery } from "@apollo/react-hooks";
 import { GET_RENTALS_QUERY } from "../gql";
 
 import {
+  makeStyles,
+  InputLabel,
+  MenuItem,
+  Select,
+  OutlinedInput
+} from "@material-ui/core";
+
+import SearchIcon from "@material-ui/icons/Search";
+
+import {
   MainWrapper,
   PageHeadingWrapper,
   GridWrapper,
@@ -12,15 +22,29 @@ import {
 } from "../styled/containers";
 import { PageHeading } from "../styled/typography";
 import { RentalCard } from "../components/RentalProjects";
-import { Select, Input, Label } from "../styled/forms";
-import { Icon, SearchIcon } from "../styled/icons";
 
 import { NewRentalModal } from "../components/RentalProjects";
 
+const useStyles = makeStyles({
+  select: {
+    minWidth: "150px",
+    marginLeft: "8px"
+  },
+  label: {
+    paddingLeft: "12px"
+  },
+  search: { marginRight: "8px" }
+});
+
 const RentalsListPage = () => {
   const [searchValue, setSearchValue] = useState("");
+  const [statusFilter, setStatusFilter] = useState("1");
+  const [configFilter, setConfigFilter] = useState("0");
+  const [typeFilter, setTypeFilter] = useState("0");
 
   const { data, loading, error } = useQuery(GET_RENTALS_QUERY);
+
+  const classes = useStyles();
 
   return (
     <MainWrapper>
@@ -30,54 +54,86 @@ const RentalsListPage = () => {
 
       <FlexWrapper justifyContent="space-between">
         <FlexWrapper>
-          <InputWrapper width="none" margin="0 5px">
-            <Label>Status</Label>
-            <Select defaultValue="current" minWidth="212px">
-              <option value="all">All</option>
-              <option value="current">Current</option>
-              <option value="completed">Completed</option>
-              <option value="erased">Erased</option>
+          <InputWrapper width="none">
+            <InputLabel
+              className={classes.label}
+              id="rental-status-filter-label"
+            >
+              Status
+            </InputLabel>
+            <Select
+              labelId="rental-status-filter-label"
+              id="rental-status-filter-select"
+              className={classes.select}
+              defaultValue={statusFilter}
+              color="primary"
+              variant="outlined"
+              onChange={e => setStatusFilter(e.target.value)}
+            >
+              <MenuItem value="0">All</MenuItem>
+              <MenuItem value="1">Current</MenuItem>
+              <MenuItem value="2">Completed</MenuItem>
+              <MenuItem value="3">Erased</MenuItem>
             </Select>
           </InputWrapper>
-          <InputWrapper width="none" margin="0 5px">
-            <Label>Config</Label>
-            <Select defaultValue="all" minWidth="212px">
-              <option value="all">All</option>
-              <option value="ST">Stereo</option>
-              <option value="51">5.1</option>
-              <option value="71">7.1</option>
-              <option value="ATMOS">ATMOS</option>
-              <option value="IMAX6">IMAX 6</option>
-              <option value="IMAX12">IMAX 12</option>
+          <InputWrapper width="none">
+            <InputLabel
+              className={classes.label}
+              id="rental-config-filter-label"
+            >
+              Config
+            </InputLabel>
+            <Select
+              labelId="rental-config-filter-label"
+              id="rental-config-filter-select"
+              className={classes.select}
+              defaultValue={configFilter}
+              color="primary"
+              variant="outlined"
+              onChange={e => setConfigFilter(e.target.value)}
+            >
+              <MenuItem value="0">All</MenuItem>
+              <MenuItem value="1">Stereo</MenuItem>
+              <MenuItem value="2">5.1</MenuItem>
+              <MenuItem value="3">7.1</MenuItem>
+              <MenuItem value="4">ATMOS</MenuItem>
+              <MenuItem value="5">IMAX 6</MenuItem>
+              <MenuItem value="6">IMAX 12</MenuItem>
             </Select>
           </InputWrapper>
-          <InputWrapper width="none" margin="0 5px">
-            <Label>Type</Label>
-            <Select defaultValue="all" minWidth="212px">
-              <option value="all">All</option>
-              <option value="features">Features</option>
-              <option value="series">Series</option>
+          <InputWrapper width="none">
+            <InputLabel className={classes.label} id="rental-type-filter-label">
+              Type
+            </InputLabel>
+            <Select
+              labelId="rental-type-filter-label"
+              id="rental-type-filter-select"
+              className={classes.select}
+              defaultValue={typeFilter}
+              color="primary"
+              variant="outlined"
+              onChange={e => setTypeFilter(e.target.value)}
+            >
+              <MenuItem value="0">All</MenuItem>
+              <MenuItem value="1">Feature</MenuItem>
+              <MenuItem value="2">Series</MenuItem>
             </Select>
           </InputWrapper>
         </FlexWrapper>
 
         <InputWrapper width="auto">
-          <Label>Search</Label>
-          <Input
-            placeholder="First, Last, Title, Company"
+          <InputLabel className={classes.label}>Search</InputLabel>
+          <OutlinedInput
+            className={classes.search}
+            placeholder="Title"
             value={searchValue}
+            label="Search"
+            color="primary"
+            notched={false}
+            endAdornment={<SearchIcon />}
+            variant="outlined"
             onChange={e => setSearchValue(e.target.value)}
-            padding="17px 50px 17px 32px"
           />
-          <Icon
-            position="absolute"
-            top="45%"
-            right="10%"
-            svgWidth="20px"
-            cursor="pointer"
-          >
-            <SearchIcon />
-          </Icon>
         </InputWrapper>
       </FlexWrapper>
       {loading && <h1>Loading...</h1>}

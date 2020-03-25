@@ -38,7 +38,7 @@ const useStyles = makeStyles({
 
 const ContactsListPage = () => {
   const [searchValue, setSearchValue] = useState("");
-  const [filterValue, setFilterValue] = useState("first-name");
+  const [sortValue, setSortValue] = useState("first-name");
 
   const { data, loading, error } = useQuery(ALL_CONTACTS_QUERY);
 
@@ -63,10 +63,10 @@ const ContactsListPage = () => {
                 labelId="contact-filter-label"
                 id="contact-filter-select"
                 className={classes.select}
-                defaultValue={filterValue}
+                defaultValue={sortValue}
                 color="primary"
                 variant="outlined"
-                onChange={e => setFilterValue(e.target.value)}
+                onChange={e => setSortValue(e.target.value)}
               >
                 <MenuItem value="first-name">First Name</MenuItem>
                 <MenuItem value="last-name">Last Name</MenuItem>
@@ -88,10 +88,7 @@ const ContactsListPage = () => {
             </InputWrapper>
           </FlexWrapper>
 
-          <SortedContactListCards
-            contacts={data.contacts}
-            sortBy={filterValue}
-          />
+          <SortedContactListCards contacts={data.contacts} sortBy={sortValue} />
 
           <NewContactModal roundButton />
         </>

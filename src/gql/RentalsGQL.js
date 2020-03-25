@@ -108,3 +108,91 @@ export const GET_ROOMS_QUERY = gql`
     }
   }
 `;
+
+// Mutations
+
+export const CREATE_RENTAL = gql`
+  mutation(
+    $title: String!
+    $season: Int
+    $abbreviation: String!
+    $channelConfig: String!
+    $startDate: Date
+    $filesLink: String!
+  ) {
+    createRentalProject(
+      title: $title
+      season: $season
+      abbreviation: $abbreviation
+      channelConfig: $channelConfig
+      startDate: $startDate
+      filesLink: $filesLink
+    ) {
+      project {
+        id
+        title
+        abbreviation
+        season
+        primaryRoom {
+          id
+          room {
+            id
+            name
+          }
+        }
+        totalDrives
+        channelConfig
+        filesLink
+      }
+    }
+  }
+`;
+
+export const DELETE_RENTAL = gql`
+  mutation($projectId: Int!) {
+    deleteRentalProject(projectId: $projectId) {
+      projectId
+    }
+  }
+`;
+
+export const EDIT_BASIC_INFO = gql`
+  mutation(
+    $id: Int!
+    $title: String
+    $season: Int
+    $abbreviation: String
+    $channelConfig: String
+    $driveUser: String
+    $drivePass: String
+    $msUser: String
+    $msPass: String
+    $filesLink: String
+  ) {
+    updateRentalProject(
+      id: $id
+      title: $title
+      season: $season
+      abbreviation: $abbreviation
+      channelConfig: $channelConfig
+      driveUser: $driveUser
+      drivePass: $drivePass
+      msUser: $msUser
+      msPass: $msPass
+      filesLink: $filesLink
+    ) {
+      project {
+        id
+        title
+        season
+        abbreviation
+        channelConfig
+        driveUser
+        drivePass
+        msUser
+        msPass
+        filesLink
+      }
+    }
+  }
+`;

@@ -19,7 +19,11 @@ export const RentalCard = ({ rental }) => {
       to={{ pathname: `/rentals/${rental.id}`, state: { rentalId: rental.id } }}
       margin="12px 0 0 0 "
     >
-      <CardHeading>{rental.title}</CardHeading>
+      <CardHeading>
+        {rental.season
+          ? `${rental.title} - S${rental.season}`
+          : `${rental.title}`}
+      </CardHeading>
       <FlexWrapper justifyContent="left" padding="0">
         <Dot color="0" />
         <CardSubheading>{rental.abbreviation}</CardSubheading>

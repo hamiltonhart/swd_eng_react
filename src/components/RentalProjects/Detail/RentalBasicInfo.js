@@ -9,7 +9,7 @@ import {
 } from "../../../styled/containers";
 import { EditBasicInfo } from "./ButtonModals/EditBasicInfo";
 
-export const RentalBasicInfo = props => {
+export const RentalBasicInfo = ({ project }) => {
   return (
     <SimpleDiv
       gridColumn="1 / 2"
@@ -27,11 +27,11 @@ export const RentalBasicInfo = props => {
         columns="1fr 125px 1fr"
       >
         <SimpleDiv padding="0" gridColumn="">
-          <Typography padding="0 0 7px 0">{props.abbreviation}</Typography>
+          <Typography padding="0 0 7px 0">{project.abbreviation}</Typography>
           <Typography padding="0 0 7px 0">
-            {(props.primaryRoom && props.primaryRoom.room.name) || "---"}
+            {(project.primaryRoom && project.primaryRoom.room.name) || "---"}
           </Typography>
-          <Typography padding="0 0 7px 0">{props.config}</Typography>
+          <Typography padding="0 0 7px 0">{project.channelConfig}</Typography>
         </SimpleDiv>
         <SimpleDiv boxSizing="border-box">
           <Typography padding="0 0 7px 0" fontColor={darkGrey}>
@@ -49,18 +49,17 @@ export const RentalBasicInfo = props => {
         </SimpleDiv>
         <SimpleDiv boxSizing="border-box">
           <Typography padding="0 0 7px 0">
-            {props.driveUser || "---"}
+            {project.driveUser || "---"}
           </Typography>
           <Typography padding="0 0 7px 0">
-            {props.drivePass || "---"}
+            {project.drivePass || "---"}
           </Typography>
-          <Typography padding="0 0 7px 0">{props.msUser || "---"}</Typography>
-          <Typography padding="0 0 7px 0">{props.msPass || "---"}</Typography>
+          <Typography padding="0 0 7px 0">{project.msUser || "---"}</Typography>
+          <Typography padding="0 0 7px 0">{project.msPass || "---"}</Typography>
         </SimpleDiv>
       </GridWrapper>
       <PositionWrapper position="absolute" bottom="5%" right="10%">
-        {/* <BlackButton small>Edit Basic Info</BlackButton> */}
-        <EditBasicInfo />
+        <EditBasicInfo project={project} projectId={project.id} />
       </PositionWrapper>
     </SimpleDiv>
   );

@@ -1,31 +1,20 @@
 import React from "react";
 
-import { makeStyles, Typography, Box } from "@material-ui/core";
+import { Snackbar } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
+import { useModal } from "../../utils";
 
-const useStyles = makeStyles({
-  mainContainer: {
-    display: "block",
-    margin: "10% auto 0 auto",
-    borderRadius: "5px",
-    maxWidth: "500px"
-  },
-  formInput: {
-    margin: "10px 0"
-  },
-  pageHeading: {
-    textTransform: "uppercase"
-  }
-});
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 export const Error = ({ error }) => {
-  const classes = useStyles();
+  const { isShowing, toggle } = useModal();
   return (
-    <Box className={classes.mainContainer} boxShadow={3} p={5}>
-      <Typography color="primary" variant="h2" align="center">
-        Error
-      </Typography>
-
-      <Typography variant="body1">{error.message}</Typography>
-    </Box>
+    <Snackbar open={isShowing} autoHideDuration={6000} onClose={() => toggle()}>
+      <Alert onClose={() => toggle()} severity="error">
+        {error.message}
+      </Alert>
+    </Snackbar>
   );
 };
