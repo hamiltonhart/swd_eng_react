@@ -7,6 +7,8 @@ import { GridWrapper, InputWrapper } from "../../../../styled/containers";
 import { Textarea } from "../../../../styled/forms";
 import { RedButton, BlackButton } from "../../../../styled/buttons";
 
+import { Button, TextField } from "@material-ui/core";
+
 export const EditNotesModal = ({ redButton, roundButton, blackButton }) => {
   const [notes, setNotes] = useState("");
 
@@ -14,9 +16,14 @@ export const EditNotesModal = ({ redButton, roundButton, blackButton }) => {
 
   return (
     <>
-      <BlackButton small onClick={() => toggle()}>
+      <Button
+        size="small"
+        color="secondary"
+        variant="contained"
+        onClick={() => toggle()}
+      >
         Edit Notes
-      </BlackButton>
+      </Button>
 
       <Modal isShowing={isShowing}>
         <ModalArea>
@@ -30,14 +37,23 @@ export const EditNotesModal = ({ redButton, roundButton, blackButton }) => {
             margin="20px 0 0 0 "
           >
             <InputWrapper gridColumn="span 12">
-              <Textarea
+              <TextField
+                variant="outlined"
+                fullWidth
+                multiline
                 rows="20"
                 value={notes}
                 onChange={e => setNotes(e.target.value)}
               />
             </InputWrapper>
             <InputWrapper gridColumn="4 / 10">
-              <RedButton minWidth="100%">{`Submit`}</RedButton>
+              <Button
+                type="submit"
+                size="large"
+                color="primary"
+                variant="contained"
+                fullWidth
+              >{`Submit`}</Button>
             </InputWrapper>
           </GridWrapper>
         </ModalArea>
