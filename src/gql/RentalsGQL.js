@@ -196,3 +196,14 @@ export const EDIT_BASIC_INFO = gql`
     }
   }
 `;
+
+export const EDIT_RENTAL_NOTES = gql`
+  mutation($id: Int!, $notes: String) {
+    updateRentalProject(id: $id, additionalInfo: $notes) {
+      project {
+        id
+        additionalInfo
+      }
+    }
+  }
+`;

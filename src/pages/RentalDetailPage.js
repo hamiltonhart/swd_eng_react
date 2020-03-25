@@ -90,7 +90,10 @@ const RentalDetailPage = props => {
                 msPass={data.rentalProject.msPass}
               />
               <RentalClients clients={data.rentalProject.rentalClients} />
-              <RentalNotes notes={data.rentalProject.additionalInfo} />
+              <RentalNotes
+                notes={data.rentalProject.additionalInfo}
+                projectId={data.rentalProject.id}
+              />
             </SimpleDiv>
             <SimpleDiv gridColumn="2/3" alignSelf="start" width="100%">
               <RentalButtons

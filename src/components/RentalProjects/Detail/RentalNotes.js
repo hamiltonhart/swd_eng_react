@@ -5,7 +5,7 @@ import { SectionHeading } from "../../../styled/typography";
 import { SimpleDiv, PositionWrapper } from "../../../styled/containers";
 import { EditNotesModal } from "./ButtonModals";
 
-export const RentalNotes = ({ notes }) => {
+export const RentalNotes = ({ notes, projectId }) => {
   return (
     <SimpleDiv
       gridColumn="1 / 2"
@@ -14,9 +14,16 @@ export const RentalNotes = ({ notes }) => {
       position="relative"
     >
       <SectionHeading gridColumn>Notes</SectionHeading>
-      <SimpleDiv padding="19px 30px">{notes || "No notes"}</SimpleDiv>
+      <SimpleDiv
+        padding="19px 30px"
+        dangerouslySetInnerHTML={{ __html: notes.replace(/\r?\n/g, "<br />") }}
+      >
+        {/* {notes
+          ? notes.split("\n").map((i, key) => <div key={key}>{i}</div>)
+          : "No notes"} */}
+      </SimpleDiv>
       <PositionWrapper position="absolute" bottom="5%" right="10%">
-        <EditNotesModal />
+        <EditNotesModal currentNotes={notes} projectId={projectId} />
       </PositionWrapper>
     </SimpleDiv>
   );
