@@ -41,9 +41,8 @@ export const ContactDetailEditModal = ({
           {data && (
             <>
               <ContactDetailModal
-                toggleEdit={toggleEdit}
-                isShowingEdit={isShowingEdit}
                 contact={data.contact}
+                toggleOverlay={toggleOverlay}
               />
               <FlexWrapper padding="0">
                 <Button

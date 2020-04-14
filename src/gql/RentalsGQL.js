@@ -207,3 +207,22 @@ export const EDIT_RENTAL_NOTES = gql`
     }
   }
 `;
+
+export const CREATE_RENTAL_CLIENT = gql`
+  mutation($clientId: Int!, $projectId: Int!, $clientRole: String) {
+    createProjectClient(
+      clientId: $clientId
+      projectId: $projectId
+      clientRole: $clientRole
+    ) {
+      projectClient {
+        id
+        client {
+          id
+          name
+        }
+        clientRole
+      }
+    }
+  }
+`;

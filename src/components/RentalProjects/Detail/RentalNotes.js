@@ -16,7 +16,9 @@ export const RentalNotes = ({ notes, projectId }) => {
       <SectionHeading gridColumn>Notes</SectionHeading>
       <SimpleDiv
         padding="19px 30px"
-        dangerouslySetInnerHTML={{ __html: notes.replace(/\r?\n/g, "<br />") }}
+        dangerouslySetInnerHTML={{
+          __html: notes ? notes.replace(/\r?\n/g, "<br />") : null
+        }}
       >
         {/* {notes
           ? notes.split("\n").map((i, key) => <div key={key}>{i}</div>)

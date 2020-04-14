@@ -3,9 +3,14 @@ import { Link } from "react-router-dom";
 
 import { PageHeading, Typography, TextLink } from "../../styled/typography";
 import { midGrey } from "../../styled/defaults";
+import { Button } from "@material-ui/core";
 import { GridWrapper, SimpleDiv } from "../../styled/containers";
 
-export const ContactDetailModal = ({ contact }) => {
+export const ContactDetailModal = ({ contact, toggleOverlay }) => {
+  const handleLinkClick = () => {
+    toggleOverlay();
+  };
+
   return (
     <>
       <PageHeading>{`${contact.firstName} ${contact.lastName}`}</PageHeading>
@@ -56,19 +61,21 @@ export const ContactDetailModal = ({ contact }) => {
         </SimpleDiv>
         <SimpleDiv gridColumn="span 9" justifySelf="left">
           {contact.rentalProjects.map(project => (
-            <TextLink
+            <Button
               key={project.id}
-              as={Link}
+              component={Link}
               className="hover"
+              color="primary"
               to={{
                 pathname: `/rentals/${project.project.id}`,
                 state: { rentalId: project.project.id }
               }}
+              onClick={() => handleLinkClick()}
               margin="0 0 10px 0"
               fontSize="16px"
             >
               {project.project.title}
-            </TextLink>
+            </Button>
           ))}
         </SimpleDiv>
         {contact.notes && (

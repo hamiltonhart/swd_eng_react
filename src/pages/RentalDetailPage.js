@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Redirect, Link, useLocation } from "react-router-dom";
 
 import {
   RentalBasicInfo,
@@ -30,10 +30,12 @@ import {
 } from "../gql";
 
 const RentalDetailPage = props => {
-  const [rentalId, setRentalId] = useState(
-    (props.location.state && props.location.state.rentalId) ||
-      window.location.pathname.slice(9)
-  );
+  const location = useLocation();
+  // const [rentalId, setRentalId] = useState(
+  //   (props.location.state && props.location.state.rentalId) ||
+  //     window.location.pathname.slice(9)
+  // );
+  const [rentalId, setRentalId] = useState(location.pathname.slice(9));
   const [deleted, setDeleted] = useState(false);
 
   const { data, loading, error } = useQuery(GET_RENTAL_QUERY, {
@@ -62,6 +64,12 @@ const RentalDetailPage = props => {
     setDeleted(!deleted);
   };
 
+  useEffect(() => {
+    if (location.pathname.slice(9) !== rentalId) {
+      setRentalId(location.pathname.slice(9));
+    }
+  });
+
   return (
     <MainWrapper>
       {deleted && <Redirect to="/rentals" />}
@@ -78,7 +86,7 @@ const RentalDetailPage = props => {
             )}
           </PageHeadingWrapper>
           <GridWrapper columns="65% 35%" columnGap="30px">
-            <SimpleDiv>
+            <SimpleDiv className="hacky-width" minWidth="100%">
               <RentalBasicInfo
                 project={data.rentalProject}
                 abbreviation={data.rentalProject.abbreviation}
@@ -89,7 +97,10 @@ const RentalDetailPage = props => {
                 msUser={data.rentalProject.msUser}
                 msPass={data.rentalProject.msPass}
               />
-              <RentalClients clients={data.rentalProject.rentalClients} />
+              <RentalClients
+                clients={data.rentalProject.rentalClients}
+                setRentalId={setRentalId}
+              />
               <RentalNotes
                 notes={data.rentalProject.additionalInfo}
                 projectId={data.rentalProject.id}

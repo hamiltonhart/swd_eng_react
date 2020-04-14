@@ -1,3 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles({});
+export const useStyles = makeStyles({
+  label: {
+    paddingLeft: "12px"
+  }
+});

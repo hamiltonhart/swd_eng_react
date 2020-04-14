@@ -25,14 +25,15 @@ export const GridWrapper = styled.div`
   justify-items: ${props => props.justifyItems || "center"};
   padding: ${props => props.padding};
   box-sizing: border-box;
-  ${props => props.columnGap && `column-gap: ${props.columnGap}`};
-  ${props => props.rowGap && `row-gap: ${props.rowGap}`};
-  ${props => props.minWidth && `min-width: ${props.minWidth}`};
-  ${props => props.maxWidth && `max-width: ${props.maxWidth}`};
-  ${props => props.margin && `margin: ${props.margin}`};
-  ${props => props.alignCenter && `margin-left: auto; margin-right: auto`};
+  ${props => props.columnGap && `column-gap: ${props.columnGap};`}
+  ${props => props.rowGap && `row-gap: ${props.rowGap};`}
+  ${props => props.minWidth && `min-width: ${props.minWidth};`}
+  ${props => props.maxWidth && `max-width: ${props.maxWidth};`}
+  ${props => props.margin && `margin: ${props.margin};`}
+  ${props => props.alignCenter && `margin-left: auto; margin-right: auto;`}
   ${props => props.alignSelf && `align-self: ${props.alignSelf};`}
   ${props => props.alignItems && `align-items: ${props.alignItems};`}
+  ${props => props.border && `border: ${props.border};`}
 `;
 
 export const FlexWrapper = styled.div`
